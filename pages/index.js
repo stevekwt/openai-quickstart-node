@@ -1,10 +1,21 @@
 import Head from "next/head";
 import { useState } from "react";
 import styles from "./index.module.css";
+import TextareaAutosize from 'react-textarea-autosize';
 
 export default function Home() {
   const [animalInput, setAnimalInput] = useState("");
   const [result, setResult] = useState();
+
+  const min = 1;
+  const max = 1000;
+
+  const [value, setValue] = useState(200);
+
+  const handleRetLenChange = event => {
+    const value = Math.max(min, Math.min(max, Number(event.target.value)));
+    setValue(value);
+  };
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -13,11 +24,14 @@ export default function Home() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ animal: animalInput }),
+      body: JSON.stringify({ 
+        animal: animalInput,
+        length: value
+      }),
     });
     const data = await response.json();
     setResult(data.result);
-    setAnimalInput("");
+    // setAnimalInput("");
   }
 
   return (
@@ -29,16 +43,34 @@ export default function Home() {
 
       <main className={styles.main}>
         <img src="/dog.png" className={styles.icon} />
-        <h3>Name my pet</h3>
+        <h3>Steve's cool page</h3>
         <form onSubmit={onSubmit}>
-          <input
+          {/* <input
             type="text"
             name="animal"
-            placeholder="Enter an animal"
+            placeholder="Prompt"
+            value={animalInput}
+            onChange={(e) => setAnimalInput(e.target.value)}
+          /> */}
+          <TextareaAutosize
+            name="animal"
+            rows={4}
+            placeholder="Prompt"
+            // placeholder={animalInput}
             value={animalInput}
             onChange={(e) => setAnimalInput(e.target.value)}
           />
-          <input type="submit" value="Generate names" />
+          {/* {animalInput} */}
+          <br></br>
+          Return length (between 1 and 1000)
+          <input
+            type="number"
+            placeholder="Return length"
+            value={value}
+            onChange={handleRetLenChange}
+          />
+          <br></br>
+          <input type="submit" value="Complete" />
         </form>
         <div className={styles.result}>{result}</div>
       </main>
