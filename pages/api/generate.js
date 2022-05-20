@@ -9,7 +9,7 @@ export default async function (req, res) {
   const completion = await openai.createCompletion("text-davinci-001", {
     // prompt: generatePrompt(req.body.animal),
     prompt: req.body.animal,
-    temperature: 0.8,
+    temperature: req.body.temperature,
     max_tokens: req.body.length,
   });
   res.status(200).json({ result: completion.data.choices[0].text });

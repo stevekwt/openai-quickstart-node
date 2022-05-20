@@ -9,12 +9,19 @@ export default function Home() {
 
   const min = 1;
   const max = 1000;
+  const minTemp = 0;
+  const maxTemp = 1;
 
   const [value, setValue] = useState(200);
+  const [valueTemp, setValueTemp] = useState(0.8);
 
   const handleRetLenChange = event => {
     const value = Math.max(min, Math.min(max, Number(event.target.value)));
     setValue(value);
+  };
+  const handleTempChange = event => {
+    const valueTemp = Math.max(minTemp, Math.min(maxTemp, Number(event.target.value)));
+    setValueTemp(valueTemp);
   };
 
   async function onSubmit(event) {
@@ -26,7 +33,8 @@ export default function Home() {
       },
       body: JSON.stringify({ 
         animal: animalInput,
-        length: value
+        length: value,
+        temperature: valueTemp
       }),
     });
     const data = await response.json();
@@ -61,6 +69,14 @@ export default function Home() {
             onChange={(e) => setAnimalInput(e.target.value)}
           />
           {/* {animalInput} */}
+          <br></br>
+          Temperature
+          <input
+            type="number"
+            placeholder="Temperature"
+            value={valueTemp}
+            onChange={handleTempChange}
+          />
           <br></br>
           Return length (between 1 and 1000)
           <input
